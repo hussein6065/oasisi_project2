@@ -26,10 +26,10 @@ class Database
         $this->username = $cleardb_url["user"];
         $this->password = $cleardb_url["pass"];
         $this->conn = null;
-        echo GETINFO;
         try {
             $this->conn = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->db_name, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            echo GETINFO;
         } catch (PDOException $e) {
             echo "Connection Error: " . $e->getMessage();
         }

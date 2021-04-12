@@ -9,7 +9,7 @@
     $student->id = '60652022';
     $result = $student->getCourses();
     while ( $row = $result->fetch(PDO::FETCH_ASSOC)){
-        $row['Faculty'];
+       echo $row['Faculty'];
     }
 
 ?>
