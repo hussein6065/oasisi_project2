@@ -29,7 +29,7 @@ if(isset($_POST['Login']))
 	if($faculty == '1'){
 	
 		// echo 'Login in '.$data['FacultyID'];
-		header('location:lecturer_dashboard.php');
+		
 		// echo '<script language="javascript">
 		// alert("You have entered '.$faculty. ' I am here")
 		// </script>';
