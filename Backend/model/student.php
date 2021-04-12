@@ -13,7 +13,16 @@ class Students
     {
         $this->conn = $db;
     }
+    public function faculty_login(){
 
+    }
+    public function student_login($user,$pass){
+     $query = "select * from Students where AshesiEmail = :user AND PasswordC = :pass";
+     $stmt = $this->conn->prepare($query);
+     $stmt->bindParam(':user', $user);
+     $stmt->bindParam(':pass', $pass);
+     $result = $stmt->execute();
+     }
    public function getCourses(){
         $query = "SELECT FA.Id, FA.CourseID, FA.Day1, FA.Day2, FA.TimeGMT1, FA.TimeGMT2,C.CourseName, F.AshesiEmail,concat(F.FName,' ',F.LName) as Faculty FROM Registered_Courses R INNER JOIN Courses C on R.CourseID = C.CourseID INNER JOIN Faculty F on R.FacultyID = F.FacultyID INNER JOIN Faculty_Availability FA ON FA.CourseID = R.CourseID WHERE R.StudentID =:id GROUP BY C.CourseID ";
         $stmt = $this->conn->prepare($query);

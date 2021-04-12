@@ -27,49 +27,44 @@ if(isset($_POST['Login']))
 	$faculty = isset($_POST["faculty"]);
 
 	if($faculty == '1'){
-		session_start();
-		// $data = $result->fetch(PDO::FETCH_ASSOC);
-		$_SESSION['FacultyID'] = "ASF95631";
+	
 		// echo 'Login in '.$data['FacultyID'];
 		header('location:lecturer_dashboard.php');
 		// echo '<script language="javascript">
 		// alert("You have entered '.$faculty. ' I am here")
 		// </script>';
-		// $query = "select * from Faculty where AshesiEmail = :user AND PasswordC = :pass";
-		// // $result = $conn->query("select * from Faculty where AshesiEmail = '$user' AND PasswordC = '$pass'");
-		// $stmt = $conn->prepare($query);
-        // $stmt->bindParam(':user', $user);
-		// $stmt->bindParam(':pass', $pass);
-        // $result = $stmt->execute();
-		// if($result->rowCount() > 0)
-		// {
-		// 	session_start();
-		// 	$data = $result->fetch(PDO::FETCH_ASSOC);
-		// 	$_SESSION['FacultyID'] = $data['FacultyID'];
-		// 	echo 'Login in '.$data['FacultyID'];
-		// 	// header('location:lecturer_dashboard.php');
-		// }
+		$query = "select * from Faculty where AshesiEmail = :user AND PasswordC = :pass";
+		// $result = $conn->query("select * from Faculty where AshesiEmail = '$user' AND PasswordC = '$pass'");
+		$stmt = $conn->prepare($query);
+        $stmt->bindParam(':user', $user);
+		$stmt->bindParam(':pass', $pass);
+       	$stmt->execute();
+		if($stmt->rowCount() > 0)
+		{
+			session_start();
+			$data = $stmt->fetch(PDO::FETCH_ASSOC);
+			$_SESSION['FacultyID'] = $data['FacultyID'];
+			// echo 'Login in '.$data['FacultyID'];
+			header('location:lecturer_dashboard.php');
+		}
 	}
 	elseif($faculty == "0"){
 		$query = "select * from Students where AshesiEmail = :user AND PasswordC = :pass";
 		$stmt = $conn->prepare($query);
         $stmt->bindParam(':user', $user);
 		$stmt->bindParam(':pass', $pass);
-		$result = $stmt->execute();
-		session_start();
-		// $data = $result->fetch(PDO::FETCH_ASSOC);
-		$_SESSION['StudentID'] = "60652022";
-		// echo 'Login in '.$data['StudentID'];
-		header('location:dashboard.php');
+		$stmt->execute();
+		
+		
 		// $result = $conn->query("select * from Students where AshesiEmail = '$user' AND PasswordC = '$pass'");
-		// if($result->rowCount() > 0)
-		// {
-		// 	session_start();
-		// 	$data = $result->fetch(PDO::FETCH_ASSOC);
-		// 	$_SESSION['StudentID'] = $data['StudentID'];
-		// 	echo 'Login in '.$data['StudentID'];
-		// 	// header('location:dashboard.php');
-		// }
+		if($stmt->rowCount() > 0)
+		{
+			session_start();
+			$data = $stmt->fetch(PDO::FETCH_ASSOC);
+			$_SESSION['StudentID'] = $data['StudentID'];
+			// echo 'Login in '.$data['StudentID'];
+			header('location:dashboard.php');
+		}
 	}
 	
    else{
