@@ -5,57 +5,57 @@
 
 
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "OfficeHours";
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "OfficeHours";
 
-$conn = new mysqli($servername, $username , $password,$dbname);
+// $conn = new mysqli($servername, $username , $password,$dbname);
 
-if ($conn->connect_error){
-	die("connection fail: " . $conn->connect_error);
-}
-$error="";
-if(isset($_POST['Login']))
-{
-	$error ="";
-	$user = $_POST['username'];
-	$pass = $_POST['password'];
-	$faculty = isset($_POST["faculty"]);
+// if ($conn->connect_error){
+// 	die("connection fail: " . $conn->connect_error);
+// }
+// $error="";
+// if(isset($_POST['Login']))
+// {
+// 	$error ="";
+// 	$user = $_POST['username'];
+// 	$pass = $_POST['password'];
+// 	$faculty = isset($_POST["faculty"]);
 	
-	if($faculty == '1'){
-		// echo '<script language="javascript">
-		// alert("You have entered '.$faculty. ' I am here")
-		// </script>';
-		$result = $conn->query("select * from Faculty where AshesiEmail = '$user' AND PasswordC = '$pass'");
-		if($result->num_rows > 0)
-		{
-			session_start();
-			$data = $result->fetch_assoc();
-			$_SESSION['FacultyID'] = $data['FacultyID'];
+// 	if($faculty == '1'){
+// 		// echo '<script language="javascript">
+// 		// alert("You have entered '.$faculty. ' I am here")
+// 		// </script>';
+// 		$result = $conn->query("select * from Faculty where AshesiEmail = '$user' AND PasswordC = '$pass'");
+// 		if($result->num_rows > 0)
+// 		{
+// 			session_start();
+// 			$data = $result->fetch_assoc();
+// 			$_SESSION['FacultyID'] = $data['FacultyID'];
 			
-			header('location:lecturer_dashboard.php');
-		}
-	}
-	elseif($faculty == "0"){
+// 			header('location:lecturer_dashboard.php');
+// 		}
+// 	}
+// 	elseif($faculty == "0"){
 		
-		$result = $conn->query("select * from Students where AshesiEmail = '$user' AND PasswordC = '$pass'");
-		if($result->num_rows > 0)
-		{
-			session_start();
-			$data = $result->fetch_assoc();
-			$_SESSION['StudentID'] = $data['StudentID'];
+// 		$result = $conn->query("select * from Students where AshesiEmail = '$user' AND PasswordC = '$pass'");
+// 		if($result->num_rows > 0)
+// 		{
+// 			session_start();
+// 			$data = $result->fetch_assoc();
+// 			$_SESSION['StudentID'] = $data['StudentID'];
 	
-			header('location:dashboard.php');
-		}
-	}
+// 			header('location:dashboard.php');
+// 		}
+// 	}
 	
-   else{
-		echo '<script language="javascript">
-		alert("You have entered the wrong credentials. Please try again")
-		</script>';
-   }
-}
+//    else{
+// 		echo '<script language="javascript">
+// 		alert("You have entered the wrong credentials. Please try again")
+// 		</script>';
+//    }
+// }
 
 
 
