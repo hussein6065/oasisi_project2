@@ -45,9 +45,13 @@ if(isset($_POST['Login']))
 		}
 	}
 	elseif($faculty == "0"){
-		
-		$result = $conn->query("select * from Students where AshesiEmail = '$user' AND PasswordC = '$pass'");
-		if($result->num_rows > 0)
+		$query = "select * from Students where AshesiEmail = :user AND PasswordC = :pass";
+		$stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user', $user);
+		$stmt->bindParam(':pass', $pass);
+		$result = $stmt->execute();
+		// $result = $conn->query("select * from Students where AshesiEmail = '$user' AND PasswordC = '$pass'");
+		if($result->rowCount() > 0)
 		{
 			session_start();
 			$data = $result->fetch(PDO::FETCH_ASSOC);
