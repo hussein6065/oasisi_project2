@@ -38,7 +38,7 @@ if(isset($_POST['Login']))
 		if($result->rowCount() > 0)
 		{
 			session_start();
-			$data = $result->fetch_assoc();
+			$data = $result->fetch(PDO::FETCH_ASSOC);
 			$_SESSION['FacultyID'] = $data['FacultyID'];
 			
 			header('location:lecturer_dashboard.php');
@@ -50,7 +50,7 @@ if(isset($_POST['Login']))
 		if($result->num_rows > 0)
 		{
 			session_start();
-			$data = $result->fetch_assoc();
+			$data = $result->fetch(PDO::FETCH_ASSOC);
 			$_SESSION['StudentID'] = $data['StudentID'];
 	
 			header('location:dashboard.php');
