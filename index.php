@@ -28,7 +28,7 @@ if(isset($_POST['Login']))
 
 	if($faculty == '1'){
 		session_start();
-		$data = $result->fetch(PDO::FETCH_ASSOC);
+		// $data = $result->fetch(PDO::FETCH_ASSOC);
 		$_SESSION['FacultyID'] = "ASF95631";
 		// echo 'Login in '.$data['FacultyID'];
 		header('location:lecturer_dashboard.php');
