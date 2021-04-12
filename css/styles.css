@@ -1,0 +1,249 @@
+* {
+    margin    : 0;
+    padding   : 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family      : 'Roboto', sans-serif;
+    font-size        : 14px;
+    min-height       : 100vh;
+    width            : 100%;
+    background       : url('../images/oasis.jpg');
+    background-size  : cover;
+    background-repeat: no-repeat;
+    color            : #fff;
+    position         : relative;
+    display          : flex;
+    justify-content  : center;
+    align-items      : center;
+    padding-top      : 120px;
+}
+
+
+input,
+button {
+    border       : none;
+    height       : 48px;
+    line-height  : 48px;
+    outline      : none;
+    border-radius: 30px;
+    font-size    : 1.2em;
+}
+
+.bkg-opaque {
+    position        : absolute;
+    top             : 0;
+    left            : 0;
+    width           : 100%;
+    height          : 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+header {
+    position: fixed;
+    top     : 0;
+    left    : 0;
+    width   : 100%;
+    height  : 150px;
+
+    display        : flex;
+    align-items    : center;
+    justify-content: space-between;
+    padding        : 0px 5%;
+}
+
+.logo-container {
+    display    : flex;
+    align-items: center;
+}
+
+.logo-container img {
+    width: 70px;
+}
+
+.logo-container h3 {
+    margin-left   : 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+ul {
+    list-style: none;
+    color     : #ccc;
+}
+
+ul li {
+    display       : inline-block;
+    letter-spacing: 0.5px;
+    margin-right  : 16px;
+    font-size     : 1.3em;
+    padding       : 8px 16px;
+    cursor        : pointer;
+    transition    : color 0.3s;
+}
+
+li:hover {
+    color: #fff;
+}
+
+li.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color           : #fff;
+}
+
+
+.login-container {
+    z-index  : 1;
+    max-width: 400px;
+}
+
+.login-welcome {
+    font-size     : 1.3em;
+    letter-spacing: 1px;
+    line-height   : 28px;
+    margin-bottom : 32px;
+}
+
+.login-form {
+    width         : 100%;
+    display       : flex;
+    flex-direction: column;
+}
+
+.login-input {
+    width   : 100%;
+    position: relative;
+}
+
+.login-input input {
+    width           : 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-bottom   : 24px;
+    padding-left    : 60px;
+    font-size       : 1.2em;
+    letter-spacing  : 1px;
+    color           : #fff;
+}
+
+.login-input::before {
+    font-family: 'FontAwesome';
+    content    : "";
+    position   : absolute;
+    left       : 28px;
+    height     : 48px;
+    line-height: 48px;
+    font-size  : 1.2em;
+    color      : #fff;
+}
+
+.login-input.username-in::before {
+    content: "\f007";
+}
+
+.login-input.password-in::before {
+    content: "\f023";
+}
+
+.submit-btn {
+    text-transform  : uppercase;
+    letter-spacing  : 2px;
+    background-color: #fc5961;
+    color           : #fff;
+    font-size       : 1.1em;
+    cursor          : pointer;
+    margin-bottom   : 24px;
+    transition      : background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: rgb(255, 108, 115);
+}
+
+.additional-act {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    color          : #ccc;
+    text-transform : capitalize;
+    letter-spacing : 1px;
+    margin-top     : 8px;
+    margin-bottom  : 16px;
+    padding        : 0 4px;
+}
+
+.additional-act>label {
+    display    : flex;
+    align-items: center;
+    cursor     : pointer;
+}
+
+.additional-act>label input {
+    margin-right: 16px;
+}
+
+.additional-act p,
+.additional-act label {
+    cursor: pointer;
+}
+
+.additional-act.new-actions {
+    text-transform: uppercase;
+    color         : #FFF;
+    letter-spacing: 2px;
+}
+
+/*  ---------------------  Checkbox Style  ----------------- */
+
+.container-ckbx input {
+    position: absolute;
+    opacity : 0;
+    cursor  : pointer;
+    height  : 0;
+    width   : 0;
+}
+
+.container-ckbx {
+    display     : block;
+    position    : relative;
+    padding-left: 35px;
+    user-select : none;
+    cursor      : pointer;
+}
+
+/* Create checkmark */
+.checkmark {
+    position        : absolute;
+    top             : 0;
+    left            : 0;
+    height          : 20px;
+    width           : 20px;
+    background-color: #eee;
+}
+
+/* Hover */
+.container-ckbx:hover input~.checkmark {
+    background-color: #ccc;
+}
+
+/* Checked */
+.container-ckbx input:hover~.checkmark {
+    background-color: #fff;
+}
+
+.checkmark:after {
+    content     : "";
+    position    : absolute;
+    left        : 6px;
+    top         : 2px;
+    width       : 4px;
+    height      : 10px;
+    border      : solid #fc5961;
+    border-width: 0 3px 3px 0;
+    transform   : rotate(45deg);
+    display     : none;
+}
+
+.container-ckbx input:checked~.checkmark:after {
+    display: block;
+}
