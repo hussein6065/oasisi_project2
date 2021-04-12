@@ -40,8 +40,8 @@ if(isset($_POST['Login']))
 			session_start();
 			$data = $result->fetch(PDO::FETCH_ASSOC);
 			$_SESSION['FacultyID'] = $data['FacultyID'];
-			
-			header('location:lecturer_dashboard.php');
+			echo 'Login in '.$data['FacultyID'];
+			// header('location:lecturer_dashboard.php');
 		}
 	}
 	elseif($faculty == "0"){
@@ -52,8 +52,8 @@ if(isset($_POST['Login']))
 			session_start();
 			$data = $result->fetch(PDO::FETCH_ASSOC);
 			$_SESSION['StudentID'] = $data['StudentID'];
-	
-			header('location:dashboard.php');
+			echo 'Login in '.$data['StudentID'];
+			// header('location:dashboard.php');
 		}
 	}
 	
