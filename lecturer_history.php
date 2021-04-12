@@ -72,7 +72,7 @@
         <!-- sidebar menu start-->
         <ul class="sidebar-menu" id="nav-accordion">
           <p class="centered"><a href="profile.html"><img src="./images/hussein.jpg" class="img-circle" width="80"></a></p>
-          <h5 class="centered">Student</h5>
+          <h5 class="centered">Faculty</h5>
           <li class="mt">
             <a href="lecturer_dashboard.php">
               <i class="fa fa-dashboard"></i>
