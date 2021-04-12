@@ -6,8 +6,8 @@
     $database = new Database();
     $db = $database->connect();
     $student = new Students($db);
-    $data = '60652022';
-    $result = $student->getPendingBooking();
+    $student->id = '60652022';
+    $result = $student->getCourses();
     while ( $row = $result->fetch(PDO::FETCH_ASSOC)){
         $row['Booked_day'];
     }
