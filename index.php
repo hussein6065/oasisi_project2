@@ -24,7 +24,9 @@ if(isset($_POST['Login']))
 	$user = $_POST['username'];
 	$pass = $_POST['password'];
 	$faculty = isset($_POST["faculty"]);
-	header('location:hussein.php');
+	session_start();
+	$_SESSION['StudentID'] = "60652022";
+	header('location:dashboard.php');
 // 	if($faculty == '1'){
 // 		// echo '<script language="javascript">
 // 		// alert("You have entered '.$faculty. ' I am here")
