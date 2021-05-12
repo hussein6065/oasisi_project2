@@ -25,7 +25,7 @@
   <meta name="description" content="">
   <meta name="author" content="Dashboard">
   <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
-  <title>Oasis - Bootstrap Admin Template</title>
+  <title>Oasis - Booking History</title>
 
   <!-- Favicons -->
   <link href="img/favicon.png" rel="icon">
@@ -97,8 +97,8 @@
         <!-- row -->
         <div class="row mt">
           <div class="col-md-12">
-            <div class="content-panel">
-              <table class="table table-striped table-advance table-hover">
+            <div class="content-panel mx-auto p-3">
+              <table class="table table-striped table-advance table-hover p-3 mx-auto">
                 <h4> Booking Status</h4>
                 <hr>
                 <thead>
@@ -107,7 +107,7 @@
                     <th class="hidden-phone"><i class="fa fa-calendar" aria-hidden="true"></i> Date</th>
                     <th><i class="fa fa-location-arrow" aria-hidden="true"></i> Office</th>
                     <th><i class=" fa fa-edit"></i> Status</th>
-                    <th></th>
+                    <th><i class=" fa fa-type"></i> Booking Type</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -119,9 +119,12 @@
                     <td>
                       <a href="#"><?php echo $row["Faculty"] ?></a>
                     </td>
-                    <td class="hidden-phone">Tue - 08:00</td>
+                    <td class="hidden-phone"><?php echo $row["BookingDate"] ?></td>
                     <td>Room 205E Engineering</td>
-                    <td><?php echo $student->historybooking($row['BookingStatus'])?></td>                    
+                    
+                      
+                    <td><?php echo $student->historybooking($row['BookingStatus'])?></td>   
+                    <td>Office Hours </td>               
                   </tr>
                   <?php }?>
                 <!--  <tr>

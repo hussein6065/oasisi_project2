@@ -83,6 +83,14 @@
               <i class="fa fa-dashboard"></i>
               <span>Bookings</span>
               </a>
+              
+          </li>
+          <li class="sub-menu">
+            <a href="edit.php">
+              <i class="fa fa-dashboard"></i>
+              <span>Edit Office Hours</span>
+              </a>
+              
           </li>
         </ul>
         <!-- sidebar menu end-->
@@ -100,80 +108,51 @@
           <?php 
               while ( $row = $result->fetch(PDO::FETCH_ASSOC)){
           ?>
-            <div class="row content-panel">
+            <div class="row content-panel" >
               <div class="col-md-4 col-sm-12 col-xs-12 profile-text mt mb centered">
                 <div class="right-divider"> <!-- hidden-sm hidden-xs // used to hide on small screens-->
                   <h4>OFFICE HOURS</h4> <br>
-                  <h6><?php  
-                 echo $faculty->formatTime($row['TimeGMT1'],$row['Day1'])
-                  ?></h6>
-                  <h6><?php  
-                  echo $faculty->formatTime($row['TimeGMT2'],$row['Day2'])
-                  ?></h6>
+                  <div><span>From: <?php 
+                  $dates = $faculty->getCourseAvailability($row['CourseID']);
+                  $data = $dates->fetch(PDO::FETCH_ASSOC);
+                  // echo $data['TimeStart'];
+                  ?></span> <span>To <?php echo 1 //$data['TimeEnd'];?></span></div>
                   <h4>OFFICE LOCATION</h4> <br>
                   <h6>Room 205E Engineering</h6>
-                  <h4>EMAIL</h4> <br>
-                  <h6>hussein.baba@ashesi.edu.gh</h6>
+                  
+                  <h3><?php echo $row['CourseName']?></h3>
+                  
+                  <h3><?php echo $faculty->getNumBookingPerDay($row['CourseID'])?>/4</h3>
                 </div>
               </div>
               <!-- /col-md-4 -->
               <div class="col-md-4 col-sm-12 col-xs-12 profile-text centered">
-                <h3>Hussein Baba</h3> <br>
-                <h6>HOD Oasis University CS Department</h6>
-                <p>Drop by for a chat</p>
+                <div class="right-divider">
+                <h3><?php echo $row['CourseName']?></h3> <br>
+                <div> <?php  echo $faculty->getAvailability() ?></div>
                 <br>
-                <p><button  onclick='getId(event)'  id="<?php echo $row["Id"]?>" class="btn btn-theme" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-pencil"></i> Edit Office Hours </button></p>
+                <p><a href='edit.php' class="btn btn-theme">View Bookings</a></p>
+              
+                </div>
               </div>
               <!-- /col-md-4 -->
-              <div class="col-md-4 col-sm-12 col-xs-12 centered">
+              <!-- <div class="col-md-4 col-sm-12 col-xs-12 centered">
                 <div class="profile-pic">
                   <p><img src="images/hussein.jpg" class="img-circle"></p>
+                 
                 </div>
-              </div>
+              </div> -->
               <!-- /col-md-4 -->
             </div>
-            <?php } ?>
+            <hr>
+           
             <!-- /row -->
+            <?php } ?>
           </div>
+         
         </div>
 
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">New Booking for Dr Hussein</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form id="formInput">
-                  <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Input New Office Day:</label>
-                      <select name="day" id="day" name="day" class="form-control">
-                        <option value="M">Monday</option>
-                        <option value="T">Tuesday</option>
-                        <option value="W">Wednesday</option>
-                        <option value="TH">Thursday</option>
-                        <option value="F">Friday</option>
-                      </select>
-                      
-                    </div>
-                    <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Input New Office Hour:</label>
-                      <input type="time" name = 'T' class="form-control" id="time">
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-theme"><i class="fa fa-pencil"></i> Update </button>
-                </div>
-                  </form>
-                </div>
-                
-              </div>
-            </div>
-          </div>
+        
 
         <!-- /container -->
       </section>

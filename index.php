@@ -109,7 +109,7 @@ if(isset($_POST['Login']))
 				<h3>Team Oasis</h3>
 			</div>
 			<ul>
-				<li>Student Portal</li>
+				<li><a href="arrival.html">Staff Arrival</a></li>
 			</ul>
 		</header>
 

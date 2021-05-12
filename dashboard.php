@@ -84,6 +84,7 @@
               <i class="fa fa-dashboard"></i>
               <span>Bookings</span>
               </a>
+              
           </li>
         </ul>
         <!-- sidebar menu end-->
@@ -104,35 +105,47 @@
             <div class="row content-panel">
               <div class="col-md-4 col-sm-12 col-xs-12 profile-text mt mb centered">
                 <div class="right-divider"> <!-- hidden-sm hidden-xs // used to hide on small screens-->
-                  <h4>OFFICE HOURS</h4> <br>
-                  <h6><?php  
-                 echo $student->formatTime($row['TimeGMT1'],$row['Day1'])
-                  ?></h6>
-                  <h6><?php  
-                  echo $student->formatTime($row['TimeGMT2'],$row['Day2'])
-                  ?></h6>
+                <div>
+                <h4>OFFICE HOURS</h4> <br>
+                  <h5>Day: <?php echo $student->formatDay($row["OfficeHourDay"]);?> </h5>
+                  <h5>Duration: <?php echo $student->formatTime($row["OfficeHourTime"]);?> </h5>
+                  <span>Total Bookings: <h3><?php $student->getNumBookingPerDay($row["CourseID"]) ?>/4</h3></span>  
+                  <?php $student->available($row['Availability'])?>
+                </div>
+                <div>
+                  <h4>Outside Office Hours</h4>
+                 <?php echo $student->available($row['FAV'])?>
+               <h5>Day: <?php echo $student->formatDay($row["OfficeHourDay"]);?> </h5>
+                  <h5>Duration: <?php echo $student->formatTime($row["TimeStart"]);?> - <?php echo $student->formatTime($row["TimeEnd"]);?> </h5>
+                  <span>Total Bookings: <h3><?php $student->getNumBookingPerDay($row["CourseID"]) ?>/4</h3></span> 
+                </div>
                   <h4>OFFICE LOCATION</h4> <br>
-                  <h6>Room 205E Engineering</h6>
-                  <h4>EMAIL</h4> <br>
-                  <h6><?php  
-                  echo $row['AshesiEmail']
-                  ?></h6>
+                  <h5>Room 205E Engineering</h5>
+                  <!-- <span><h3>0/4</h3></span> -->
                 </div>
               </div>
               <!-- /col-md-4 -->
               <div class="col-md-4 col-sm-12 col-xs-12 profile-text centered">
+                <div class="right-divider">
                 <h3><?php  
                 echo  $row['Faculty']
                   ?></h3> <br>
-                <h6>HOD Oasis University CS Department</h6>
+                  <?php echo $student->available(false); ?>
+                  <h4><?php echo $row["CourseName"]?></h4>
+                <span><h4>Email: </h4><?php  
+                  echo $row['AshesiEmail']
+                  ?></span>
                 <p>Drop by for a chat</p>
                 <br>
-                <p><button onclick='getId(event)' id = <?php echo $row["Id"] ?> class="btn btn-theme" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-envelope"></i> Book Appointment </button></p>
+                <p><button onclick='getId(event)' id = "<?php echo $row["Id"] ?>, <?php echo $_SESSION['StudentID'];?>" class="btn btn-theme" type="button" data-toggle="modal" <?php 
+                  echo $row['Availability']==false ?"disable":"";
+                ?>data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-envelope"></i> Book Appointment </button></p>
               </div>
+                </div>
               <!-- /col-md-4 -->
               <div class="col-md-4 col-sm-12 col-xs-12 centered">
                 <div class="profile-pic">
-                  <p><img src="images/hussein.jpg" class="img-circle"></p>
+                  <!-- <p><img src="images/hussein.jpg" class="img-circle"></p> -->
                 </div>
               </div>
               <!-- /col-md-4 -->
@@ -148,7 +161,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">New Booking for Dr Hussein</h5>
+                  <h3 class="modal-title" id="exampleModalLabel">Booking for Office Hours</h3>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -156,21 +169,21 @@
                 <div class="modal-body">
                   <form method="POST" id = "formInput">
                     <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Name:</label>
-                      <input type="text" class="form-control" id="sender-name">
+                      <label for="recipient-name" class="col-form-label">Name</label>
+                      <input type="text" class="form-control" id="sender-name" placeholder="Enter Name">
                     </div>
                     <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Select Time</label>
-                     <select class="form-control" name="time">
-                       <option value="8:00am" >Tue - 8:00am</option>
-                       <option value="9:00am" >Thurs - 9:00am</option>
+                      <label for="recipient-name" class="col-form-label">Select Type of Booking</label>
+                     <select class="form-control" name="type" default=''>
+                       <option value="within" >Office Hours</option>
+                       <option value="outside" >Outside Office</option>
                        
                      </select>
                     </div>
                     
                     <div class="form-group">
-                      <label for="message-text" class="col-form-label">Purpose of booking:</label>
-                      <textarea class="form-control" id="message-text" name="text"></textarea>
+                      <label for="message-text" class="col-form-label">Purpose of Meeting</label>
+                      <textarea placeholder="Enter a short description of the problem." class="form-control" id="message-text" name="text"></textarea>
                     </div>
                     <div class="modal-footer">
                   <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -210,11 +223,15 @@
     event.preventDefault();
     var id = localStorage.getItem("BookingId");
     var message = form['text'].value;
+    var type = form['type'].value;
     var data = {
-      studentId:60652022,
-      lectureId: id,
+      studentId:id.split(",")[1],
+      lectureId: id.split(",")[0],
+      type: type,
       msg: message
     }
+
+    console.log(data);
     var serverCall = new XMLHttpRequest();
 				serverCall.open('POST', './Backend/api/booking.php', true);
 
@@ -223,8 +240,13 @@
 						if (this.response === 0) {
 						alert("Problem Occured")
 						} else {
-              alert("The message have been sent");
-              location.reload();
+              if(this.responseText==1){
+                alert("The message have been sent");
+                location.reload();
+              }else{
+                alert("Invalid Input");
+              }
+              //
               
               
 							
@@ -236,7 +258,7 @@
 					}
 				};
         serverCall.send(JSON.stringify(data));
-    console.log('Hussein I am trying to submit');
+  
 
   }            
   form.addEventListener('submit',Submit)

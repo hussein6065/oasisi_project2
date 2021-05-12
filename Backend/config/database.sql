@@ -48,6 +48,8 @@ CREATE TABLE Courses(
 	CourseID VARCHAR(10) PRIMARY KEY,
     DepartmentCode VARCHAR(10) NOT NULL,
     CourseName VARCHAR(50) NOT NULL,
+    OfficeHourDay ENUM("M","T","W","TH","F"),
+    OfficeHourTime TIME DEFAULT NOW(),
     Credit enum('Full', 'Half'),
     CreditHours DECIMAL(5,1),
     FOREIGN KEY(DepartmentCode) REFERENCES Departments(DepartmentCode)
@@ -64,32 +66,36 @@ CREATE TABLE Registered_Courses(
     FOREIGN KEY (FacultyID) REFERENCES Faculty(FacultyID)
 	);
 
-
-
-
-
-CREATE TABLE Faculty_Availability(
-	Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    CourseID VARCHAR(10)NOT NULL,
+CREATE TABLE Faculty_Arrival(
+    Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     FacultyID VARCHAR(10) NOT NULL,
-    Day1 ENUM ('M','T','W','TH','F'),
-    Day2 ENUM ('M','T','W','TH','F'),
-    TimeGMT1 TIME DEFAULT NULL,
-    TimeGMT2 TIME DEFAULT NULL,
-    FOREIGN KEY (CourseID) REFERENCES Courses (CourseID),
+    ArrivalTime Timestamp DEFAULT NOW(),
+    Availability BOOLEAN DEFAULT True,
     FOREIGN KEY (FacultyID) REFERENCES Faculty(FacultyID)
-    
+);
+CREATE TABLE Faculty_Course_Availability(
+	Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    Date DATETIME DEFAULT NOW(),
+    CourseID VARCHAR(10)NOT NULL,
+    Faculty_AvailabilityID BIGINT UNSIGNED NOT NULL,
+    TimeStart TIME DEFAULT NULL,
+    TimeEnd TIME DEFAULT NULL,
+    Availability BOOLEAN DEFAULT False,
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID),
+    FOREIGN KEY (Faculty_AvailabilityID) REFERENCES Faculty_Arrival(Id)
 	);
+
+
 CREATE TABLE Booking(
     BookingID BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     BookingDate DATETIME DEFAULT NOW(),
     Faculty_AvailabilityId BIGINT UNSIGNED,
+    StudentID INT UNSIGNED,
+    Outside_OfficeHours BOOLEAN NOT NULL,
     Booked_day ENUM ('M','T','W','TH','F'),
-    Booked_time TIME NOT NULL,
-    StudentID INT UNSIGNED NOT NULL,
     BookingStatus  ENUM("P","T","C","E") DEFAULT "P", -- P => pending, T => Confirmed, C => Cancelled E => ended.
     Message TINYTEXT,
-    FOREIGN KEY (Faculty_AvailabilityId) REFERENCES Faculty_Availability (Id),
+    FOREIGN KEY (Faculty_AvailabilityId) REFERENCES Faculty_Course_Availability (Id),
     FOREIGN KEY (StudentID) REFERENCES Students (StudentID)
 );
 -- create the faculty availability table
@@ -131,7 +137,8 @@ INSERT INTO Departments VALUES ('HSS', 'Humanities and Social Sciences'),
                                 ('ENG','Engineering');   
     
     
-INSERT INTO Courses VALUES ('SOAN 221','HSS','Leadership II','Half',1.5),
+INSERT INTO Courses (CourseID, DepartmentCode,CourseName,Credit,CreditHours) VALUES 
+                            ('SOAN 221','HSS','Leadership II','Half',1.5),
 							('MATH 221','CSIS','Statistics with probability','Full',4),
                             ('CS 222','CSIS','Data Structures','Full',4),
                             ('BUSA 222','BA','Intro to Finance','Full',4),
@@ -180,15 +187,17 @@ INSERT INTO Registered_Courses(StudentID,CourseID,FacultyID)
                                      ('89322022','SOAN 221','ASF95631'),
 									 ('89322022','CS 222','ASF95631'),
                                      ('89322022','ECON 102','ASF95631');
+INSERT INTO Faculty_Arrival(FacultyID)
+        VALUES ("ASF95631");
 
-INSERT INTO Faculty_Availability (CourseID,FacultyID)
-		VALUES ('CS 222','ASF95631'),
-			   ('SOAN 221','ASF95631'),
-               ('MATH 221','ASF95631'),
-               ('ECON 102','ASF95631'),
-               ('BUSA 222','ASF95631'),
-			   ('CS 221','ASF95631'),
-               ('ENG 221','ASF95631');
+INSERT INTO Faculty_Course_Availability (CourseID,Faculty_AvailabilityID)
+		VALUES ('CS 222','1'),
+			   ('SOAN 221','1'),
+               ('MATH 221','1'),
+               ('ECON 102','1'),
+               ('BUSA 222','1'),
+			   ('CS 221','1'),
+               ('ENG 221','1');
 
 -- Getting the number of course for the lecturer
 

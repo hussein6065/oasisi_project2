@@ -85,6 +85,13 @@
               <span>Bookings</span>
               </a>
           </li>
+          <li class="sub-menu">
+            <a href="edit.php">
+              <i class="fa fa-dashboard"></i>
+              <span>Edit Office Hours</span>
+              </a>
+              
+          </li>
         </ul>
         <!-- sidebar menu end-->
       </div>

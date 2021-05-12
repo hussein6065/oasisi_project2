@@ -13,12 +13,129 @@ class Faculty
     }
 
    public function getCourses(){
-        $query = "SELECT FA.Id, FA.CourseID, FA.Day1, FA.Day2, FA.TimeGMT1, FA.TimeGMT2, CO.CourseName FROM Faculty_Availability FA 
-        LEFT JOIN Courses CO ON FA.CourseID = CO.CourseID
-        LEFT JOIN Faculty F ON FA.FacultyID = F.FacultyID
-        WHERE F.FacultyID =:id";
+     //    $query = "SELECT FA.Id, FA.CourseID,  CO.CourseName FROM Faculty_Availability FA 
+     //    LEFT JOIN Courses CO ON FA.CourseID = CO.CourseID
+     //    LEFT JOIN Faculty F ON FA.FacultyID = F.FacultyID
+     //    WHERE F.FacultyID =:id";
+
+     
+     $query = "SELECT DISTINCT R.CourseID, CO.CourseName FROM Registered_Courses R LEFT JOIN
+          Courses CO ON R.CourseID = CO.CourseID
+          LEFT JOIN Faculty F ON R.FacultyID  = F.FacultyID
+          WHERE R.FacultyID =:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+        return $stmt;
+   }
+   
+   public function getCourseAvailability($course){
+     $date = date("Y-m-d");
+     $query = "SELECT Availability, Id, TimeStart,TimeEnd from Faculty_Course_Availability where CAST(Date AS DATE) =:D and CourseID=:C";
+     $stmt = $this->conn->prepare($query);
+     
+     $stmt->bindParam(':D', $date);
+     $stmt->bindParam(':C', $course);
+     // $stmt->bindParam(':Id', $this->id);
+
+     $stmt->execute();
+     return $stmt;
+
+     // "SELECT FA.Availability as FAV, FA.TimeStart,FA.TimeEnd, FA.Id, FAA.Availability, FA.CourseID, C.CourseName,C.OfficeHourDay,C.OfficeHourTime, F.AshesiEmail,concat(F.FName,' ',F.LName) as Faculty,  FROM Registered_Courses R INNER JOIN Courses C on R.CourseID = C.CourseID INNER JOIN Faculty F on R.FacultyID = F.FacultyID INNER JOIN Faculty_Course_Availability FA ON FA.CourseID = R.CourseID
+     //      INNER JOIN Faculty_Arrival FAA ON FAA.FacultyID = R.FacultyID  WHERE R.StudentID =:id GROUP BY C.CourseID ";
+   }
+
+   public function getNumBookingPerDay($course){
+        $date = date("Y-m-d");
+     $query = "SELECT COUNT(StudentID) as bookCount FROM Booking B
+     LEFT JOIN Faculty_Course_Availability FA ON B.Faculty_AvailabilityId=FA.Id
+     LEFT JOIN Faculty_Arrival F ON F.Id=FA.Faculty_AvailabilityID
+     WHERE CAST(B.BookingDate AS DATE) =:D and FA.CourseId=:c and F.FacultyID=:Id";
+     
+     $stmt = $this->conn->prepare($query);
+     $stmt->bindParam(':c', $course);
+     $stmt->bindParam(':D', $date);
+     $stmt->bindParam(':Id', $this->id);
+     $stmt->execute();
+     $results = $stmt->fetch(PDO::FETCH_ASSOC);
+     return $results['bookCount'];
+   }
+   public function getAvailability(){
+     $date = date("Y-m-d");
+     $query = "SELECT Availability from Faculty_Arrival where CAST(ArrivalTime AS DATE) =:D and FacultyID=:Id";
+     $stmt = $this->conn->prepare($query);
+     
+     $stmt->bindParam(':D', $date);
+     $stmt->bindParam(':Id', $this->id);
+     $stmt->execute();
+     if($stmt->rowCount()>0){
+          $results = $stmt->fetch(PDO::FETCH_ASSOC);
+          return $this->available($results['Availability']);
+     }
+     return $this->available(false);
+     
+}
+   public function available($status){
+        switch ($status) {
+             case 1:
+                  return  ('<span style="
+                  background-color: green;" class="badge ">Available</span>');
+             
+             default:
+                    return  ('<span style="
+                    background-color: brown;" class="badge ">Unavailable</span>');
+        }
+   }
+   public function getCourse(){
+     $query = "SELECT CourseID FROM Registered_Courses WHERE FacultyID =:id";
+     $stmt = $this->conn->prepare($query);
+     $stmt->bindParam(':id', $this->id);
+     $stmt->execute();
+     $info = array();
+     while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+          array_push($info,$row['CourseID']);
+      }
+     return $info;
+     }
+     public function faculty_availability(){
+
+          $query = "INSERT INTO Faculty_Arrival(FacultyID) VALUES(:id)";
+          $stmt = $this->conn->prepare($query);
+          $stmt->bindParam(':id', $this->id);
+          $stmt->execute();
+          $availability_id = $this->conn->lastInsertId();
+          $courses = $this->getCourses();
+          foreach ($courses as $course) {
+               $this->insertCourseAvailability($availability_id,$course);
+          }
+          return true;
+     }
+     public function turnOffAvailability(){
+          $query = 'UPDATE Faculty_Arrival SET Availability=0 where Id=:id ';
+          $stmt = $this->conn->prepare($query);
+          $stmt->bindParam(':id', $this->id);
+          return $stmt;
+     }
+    
+     public function insertCourseAvailability($availability_id,$course){
+          $query = "INSERT INTO Faculty_Availability(CourseID, Faculty_AvailabilityID) VALUES(:course,:availId)";
+          $stmt = $this->conn->prepare($query);
+          $stmt->bindParam(':course', $course);
+          $stmt->bindParam(':availId', $availability_id);
+          $stmt->execute();
+     }
+   public function getName(){
+     $query = "SELECT concat(FName,' ', LName) as FacultyName FROM Faculty where FacultyID=:id";
+     $stmt = $this->conn->prepare($query);
+     $stmt->bindParam(':id', $this->id);
+     $stmt->execute();
+     return $stmt;
+   }
+   
+
+   public function getIds(){
+        $query = 'SELECT FacultyID from Faculty';
+        $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
    }

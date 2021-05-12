@@ -13,3 +13,4 @@
     }
 
 ?>
+<!-- <button  onclick='getId(event)'  id="<?php echo $row["Id"]?>,  <?php echo $data['Id'] ?>" class="btn btn-theme" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-pencil"></i> Edit Office Hours </button> -->
